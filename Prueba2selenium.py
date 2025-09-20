@@ -48,7 +48,14 @@ take_screenshot(driver, "segundo_numero")
 
 # seleccionar operación
 select = Select(driver.find_element(By.ID, "selectOperationDropdown"))
-select.select_by_value("2")  
+select.select_by_visible_text("Add") 
+#Posibles operaciones:
+# Add
+#Subtract
+#Multiply
+#Divide
+#Concatenate
+
 take_screenshot(driver, "operacion")
 
 # clic en Calcular
