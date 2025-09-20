@@ -1,9 +1,8 @@
 from playwright.sync_api import sync_playwright
 import time
 import os
-from PIL import Image
 
-PROTOTIPO = ""  
+PROTOTIPO = "5"
 
 os.makedirs("evidencias", exist_ok=True)
 
@@ -30,15 +29,12 @@ with sync_playwright() as p:
     contador = 1
 
     for operacion, esperado in operaciones.items():
-        # Ingresar números
         page.fill("#number1Field", "8")
         page.fill("#number2Field", "4")
-
         page.select_option("#selectOperationDropdown", label=operacion)
-
         page.click("#calculateButton")
-
         page.wait_for_selector("#numberAnswerField")
+        page.wait_for_timeout(500)
 
         resultado = page.input_value("#numberAnswerField")
         estado = "Éxito ✅" if resultado == esperado else "Fallo ❌"
@@ -46,10 +42,6 @@ with sync_playwright() as p:
         nombre = f"evidencias/test_{contador}_{PROTOTIPO}_{operacion}.png"
         page.screenshot(path=nombre)
         print(f"[OK] Pantallazo guardado: {nombre}")
-
-        img = Image.open(nombre)
-        img.show()
-
         print(f"Operación: {operacion} | Esperado: {esperado} | Obtenido: {resultado} | {estado}")
 
         with open(log_file, "a", encoding="utf-8") as f:
@@ -60,9 +52,11 @@ with sync_playwright() as p:
             f.write(f"  - Estado: {estado}\n\n")
 
         contador += 1
-        time.sleep(1)
-        
-    time.sleep(5)
+        time.sleep(2)
+
+    time.sleep(3)
     browser.close()
 
 print(f"\n[INFO] Pruebas finalizadas. Registro guardado en: {log_file}")
+
+
